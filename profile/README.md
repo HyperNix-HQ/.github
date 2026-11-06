@@ -124,13 +124,15 @@ Measured with a real application, one request at a time and then under load:
 | --- | --- | --- | --- |
 | `hypernix` | System | The control plane: planner, approval gate, projects, landing, serving, ingress, the cockpit and the docs | Private |
 | `hex-sessions` | System | The build-session broker and the network guard | Private |
+| `stamp-lab` | System | The microVM lab: bake an app once, stamp a fresh Firecracker microVM per request | Private |
+| `hypernix-setup` | System | The from-scratch setup guide: seven steps, each ending in a check | Private |
 | `hypernix-fleet` | Hosts | The NixOS for every machine HyperNix creates | Private |
 | `flox-fleet` | Hosts | A second fleet, deployed with Flox | Private |
-| `hypernix-setup` | System | The from-scratch setup guide as a repository | Next |
-| `recipes` | Hosts | A library of Nix-proven service modules | Next |
-| `app-<name>` | Apps | One private repository per project HyperNix builds: the app plus its NixOS | Next |
+| `recipes` | Hosts | Four NixOS service modules, each proved by `nix flake check`: a sandbox baseline, a bun app, a local PostgreSQL, a static site | Private |
+| `app-<name>` | Apps | One private repository per project HyperNix builds: the app plus its NixOS. HyperNix creates it when it publishes the project | Private, created on publish |
+| `.github` | Profile | This page and the security policy | **Public** |
 
-The repositories are private. This page is the public front door.
+Every repository is private except `.github`, which is this page. The organization requires two-factor authentication, gives members no default access, and runs no GitHub Actions.
 
 ---
 
@@ -143,9 +145,9 @@ The repositories are private. This page is the public front door.
 ## Next
 
 - **The front doors.** Cloudflare Tunnel into the host and Fly.io per app for global reach, each behind a cost approval and a monthly spend cap.
-- **`hypernix-setup`.** The from-scratch guide, from a bare Proxmox host to a live HyperNix, in seven steps that each end in a check you can run.
-- **`recipes`.** A library of NixOS service modules that Nix has already proved.
-- **`app-<name>`.** Each project HyperNix builds, published here as its own private repository.
+- **The first published app.** The first project HyperNix publishes becomes the first `app-<name>` repository here.
+- **Booted checks for `recipes`.** Today a recipe is proved by evaluating it into a full system and asserting what comes out; the next step boots it in a container.
+- **A faster transport for the microVM lab.** A vsock channel in place of the serial console, which is where most of the 17 ms per later request goes.
 
 ---
 
